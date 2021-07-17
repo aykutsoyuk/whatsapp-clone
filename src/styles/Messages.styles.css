@@ -1,0 +1,39 @@
+.messages-header {
+  background-color: #f6511d;
+  color: #F9E7E7;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.messages-avatar {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #F9E7E7;
+  background-color: #00A6ED;
+  border-radius: 50%;
+  position: absolute;
+  left: 10px;
+}
+
+.messages-list {
+  padding: 0;
+}
+
+.messages-list-item {
+  position: relative;
+  list-style: none;
+  height: 40px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #47444807;
+  cursor: pointer;
+}
+
+.messages-item-header {
+  margin-left: 60px;
+}
