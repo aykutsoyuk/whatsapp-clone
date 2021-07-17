@@ -1,7 +1,24 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import "../styles/Chat.styles.css"
 
 const Chat = () => {
+  const formRef = useRef()
+  const [message, setMessage] = useState("");
+
+  const sendMessage = (e) => {
+    e.preventDefault()
+    if(message) {
+      console.log(message)
+      setMessage("")
+    }
+  }
+
+  const catchEnter = (e) => {
+    if (e.keyCode === 13) {
+      formRef.current.submit();
+    }
+  }
+
   return <div className="main">
     <header className="chat-header">
     <button className="chat-back-button">Back</button>
@@ -22,10 +39,10 @@ const Chat = () => {
         <div className="chat-bubble">lj laj jabg lajhbg lagb al slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
         <div className="chat-bubble myMessage">lj laj jabg dgf</div>
       </div>
-      <div className="chat-input-area">
-        <input className="chat-input" placeholder="Write a message" />
-        <button className="chat-send-button">Send</button>
-      </div>
+      <form className="chat-form" ref={formRef}>
+        <input className="chat-input" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write a message" type="text" />
+        <button className="chat-send-button" type="submit" onKeyDown={catchEnter} onClick={sendMessage}>Send</button>
+      </form>
     </div>;
 };
 
