@@ -1,5 +1,5 @@
 .messages-header {
-  background-color: #f6511d;
+  background-color: #00A6ED;
   color: #F9E7E7;
   padding: 20px;
   display: flex;
@@ -13,7 +13,7 @@
   width: 50px;
   height: 50px;
   border: 2px solid #F9E7E7;
-  background-color: #00A6ED;
+  background-color: #FFB400;
   border-radius: 50%;
   position: absolute;
   left: 10px;

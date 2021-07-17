@@ -36,5 +36,6 @@
   border-radius: 4px;
   box-shadow: -2px 8px 30px rgba(0, 0, 0, 0.4);
   font-family: 'Acme', sans-serif;
+  position: relative;
 }
 
