@@ -1,8 +1,8 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./views/Login"
-import Chat from "./views/Chat"
-import Messages from "./views/Messages"
+import MyChat from "./views/MyChat"
+import Chats from "./views/Chats"
 
 function App() {
   return (
@@ -15,11 +15,11 @@ function App() {
           <Route exact path="/">
             <Login />
           </Route>
-          <Route path="/messages">
-            <Messages />
+          <Route path="/chats">
+            <Chats />
           </Route>
           <Route path="/chat/:id">
-            <Chat />
+            <MyChat />
           </Route>
         </Switch>
       </div>

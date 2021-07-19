@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import "../styles/Chat.styles.css"
 
-const Chat = () => {
+const MyChat = () => {
   const formRef = useRef()
   const [message, setMessage] = useState("");
 
@@ -46,4 +46,4 @@ const Chat = () => {
     </div>;
 };
 
-export default Chat;
+export default MyChat;
