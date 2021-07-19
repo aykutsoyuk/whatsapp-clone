@@ -1,49 +1,93 @@
-import React, { useState, useRef } from "react";
-import "../styles/Chat.styles.css"
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router";
+import "../styles/Chat.styles.css";
+import { db } from "../db/index.js";
+import { Link } from "react-router-dom";
+import firebase from "firebase"
 
 const MyChat = () => {
-  const formRef = useRef()
+  const formRef = useRef();
   const [message, setMessage] = useState("");
+  const [channel, setChannel] = useState({});
+  const [chatMember, setChatMember] = useState({})
+  const { chatID } = useParams();
+  const user = firebase.auth().currentUser;
+
+  useEffect(() => {
+    db.collection("chats")
+      .where("id", "==", parseInt(chatID))
+      .get()
+      .then((snapshot) => setChannel(snapshot.docs[0].data()));
+  }, []);
+
+  const memberID = channel?.members?.filter(id => id !== user?.uid)
+
+  useEffect(() => {
+    memberID &&
+    db.collection("users")
+      .where("id", "==", memberID[0])
+      .get()
+      .then((snapshot) => setChatMember(snapshot?.docs[0]?.data()));
+  }, [memberID]);
 
   const sendMessage = (e) => {
-    e.preventDefault()
-    if(message) {
-      console.log(message)
-      setMessage("")
+    e.preventDefault();
+    if (message) {
+      console.log(message);
+      setMessage("");
     }
-  }
+  };
 
   const catchEnter = (e) => {
     if (e.keyCode === 13) {
       formRef.current.submit();
     }
-  }
+  };
 
-  return <div className="main">
-    <header className="chat-header">
-    <button className="chat-back-button">Back</button>
+  return (
+    <div className="main">
+      <header className="chat-header">
+        <Link to="/chats">
+        <button className="chat-back-button">Back</button>
+        </Link>
         <span className="chat-avatar">
           <img className="chat-avatar-image" />
         </span>
-        <h3>Joshua Mon Tecart</h3>
+        <h3>{ chatMember?.name }</h3>
       </header>
       <div className="chat-body">
-        <div className="chat-bubble myMessage">lj laj bdfljah bdljahdbf lajhdbfgljabg lajhbg lagb aljfhdgb aljdsfhgb sljfdgb slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble">lj aljfhdgb aljdsfhfjgb sldgf</div>
-        <div className="chat-bubble">lj laj bdfljah bdljahdbf lajhdbfjdsfhgb sljfdgb slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble myMessage">lj laj  lagb aljfjghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble">lj laj jabg lajhbg lagb al slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble myMessage">lj laj jabg dgf</div>
-        <div className="chat-bubble">lj laj bdfljah bdljahdbf lajhdbfjdsfhgb sljfdgb slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble myMessage">lj laj  lagb aljfjghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble">lj laj jabg lajhbg lagb al slfdjghb sdljghbsdlgjhb sdlfjgb sldgf</div>
-        <div className="chat-bubble myMessage">lj laj jabg dgf</div>
+        {channel?.messages?.map((message) => (
+          <div
+            key={message.id}
+            className={
+              message.sender_id === user.uid
+                ? "chat-bubble myMessage"
+                : "chat-bubble"
+            }
+          >
+            {message.text}
+          </div>
+        ))}
       </div>
       <form className="chat-form" ref={formRef}>
-        <input className="chat-input" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Write a message" type="text" />
-        <button className="chat-send-button" type="submit" onKeyDown={catchEnter} onClick={sendMessage}>Send</button>
+        <input
+          className="chat-input"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Write a message"
+          type="text"
+        />
+        <button
+          className="chat-send-button"
+          type="submit"
+          onKeyDown={catchEnter}
+          onClick={sendMessage}
+        >
+          Send
+        </button>
       </form>
-    </div>;
+    </div>
+  );
 };
 
 export default MyChat;
