@@ -1,22 +1,19 @@
-import { useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "./views/Login";
 import MyChat from "./views/MyChat";
 import Chats from "./views/Chats";
 
 function App() {
-  const [user, setUser] = useState({});
-  
   return (
-    <Router>
-      <div className="App">
-        <header className="App-header">
-          <h1>Chatsapp</h1>
-        </header>
+    <div className="App">
+      <header className="App-header">
+        <h1>Chatsapp</h1>
+      </header>
+      <Router>
         <Switch>
           <Route exact path="/">
-            <Login setUser={setUser} />
+            <Login />
           </Route>
           <Route path="/chats">
             <Chats />
@@ -25,8 +22,8 @@ function App() {
             <MyChat />
           </Route>
         </Switch>
-      </div>
-    </Router>
+      </Router>
+    </div>
   );
 }
 

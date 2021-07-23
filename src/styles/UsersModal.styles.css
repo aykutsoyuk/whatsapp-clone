@@ -1,0 +1,48 @@
+.modalWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.modal {
+  position: fixed;
+  background: #474448;
+  color: #F9E7E7;
+  width: 50%;
+  max-height: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: open 0.2s;
+  overflow: auto;
+  text-align: left;
+  padding: 10px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #F9E7E7;
+  background-color: #474448;
+  border: none;
+  cursor: pointer;
+}
+
+.chatList-item {
+  list-style: none;
+}
+
+@keyframes open {
+  from {
+    transform: translate(-50%, 50%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}

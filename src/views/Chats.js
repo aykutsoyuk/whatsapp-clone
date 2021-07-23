@@ -1,32 +1,48 @@
 import React, { useState, useEffect } from "react";
 import "../styles/Messages.styles.css";
+import UsersModal from "../components/UsersModal";
 import { db } from "../db/index.js";
-import { Link } from "react-router-dom";
-import firebase from "firebase"
+import { Link, Redirect } from "react-router-dom";
+import firebase from "firebase";
 
 const Chats = () => {
   const [chats, setChats] = useState([]);
-  const user = firebase.auth().currentUser;
+  const currentUser = firebase.auth().currentUser;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    db.collection("users").onSnapshot((snapshot) =>
+      setUsers(snapshot.docs.map((data) => data.data()))
+    );
+  }, []);
 
   useEffect(() => {
     db.collection("chats").onSnapshot((snapshot) =>
       setChats(snapshot.docs.map((data) => data.data()))
     );
   }, []);
-  console.log("chats", chats);
+
+  const openModal = () => {
+    users && setUsers(users.filter((user => user.name !== currentUser.displayName)))
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="main">
+      {!currentUser && <Redirect to="/" />}
       <header className="messages-header">
         <span className="messages-avatar">
           <img className="messages-avatar-image" />
         </span>
         <h2>Chats</h2>
+        <button onClick={openModal}>Create Chat</button>
       </header>
       {!!chats[0] ? (
         <ul className="messages-list">
           {chats?.map((item) => (
             <Link to={`chat/${item.id}`} key={item.id}>
-              <li className="messages-list-item">
+              <li key={item.id} className="messages-list-item">
                 <span className="messages-avatar">
                   <img className="messages-avatar-image" />
                 </span>
@@ -37,6 +53,14 @@ const Chats = () => {
         </ul>
       ) : (
         "Loading"
+      )}
+      {isModalOpen && (
+        <UsersModal
+          currentUser={currentUser}
+          users={users}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
       )}
     </div>
   );
