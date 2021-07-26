@@ -24,9 +24,9 @@ const UsersModal = (props) => {
           X
         </button>
         <ul className="chatList">
-          {props.users?.map((user) => (
+          {props.users?.map((user) => (user.email &&
             <li key={user.id} className="chatList-item">
-              <button onClick={() => createChat(user)}>{user.name}</button>
+              <button onClick={() => createChat(user)}>{user.email}</button>
             </li>
           ))}
         </ul>

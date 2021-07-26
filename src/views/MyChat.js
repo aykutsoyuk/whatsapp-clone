@@ -9,45 +9,45 @@ const MyChat = () => {
   const formRef = useRef();
   const [message, setMessage] = useState("");
   const [channelMessages, setChannelMessages] = useState([]);
-  const [channel, setChannel] = useState({});
   const [chatMember, setChatMember] = useState({});
   const { chatID } = useParams();
   const user = firebase.auth().currentUser;
 
-  const chatWrapper = useRef()
+  const chatWrapper = useRef();
 
   const scrollToBottom = () => {
     const target = chatWrapper.current;
-    target?.scroll({ top: target?.scrollHeight, behavior: "smooth" })
-  }
+    target?.scroll({ top: target?.scrollHeight, behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToBottom();
   }, [channelMessages]);
 
   useEffect(() => {
-    getMessages()
-    return channelMessages
-  }, [channelMessages]);
+    getMessages();
+  }, []);
 
-  console.log("channelMessages",channelMessages)
+  console.log("channelMessages", channelMessages);
 
   useEffect(() => {
     db.collection("chats")
       .where("id", "==", chatID)
       .get()
-      .then((snapshot) => setChannel(snapshot.docs[0].data()));
+      .then((snapshot) => {
+        findMember(snapshot.docs[0].data());
+      });
   }, []);
-  
-  useEffect(() => {
-    const memberID = channel?.members?.filter((item) => item !== user?.uid)
+
+  const findMember = (channel) => {
+    const memberID = channel?.members?.filter((item) => item !== user?.uid);
     memberID &&
       db
         .collection("users")
         .where("id", "==", memberID[0])
         .get()
         .then((snapshot) => setChatMember(snapshot?.docs[0]?.data()));
-  }, []);
+  };
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -58,8 +58,8 @@ const MyChat = () => {
         text: message,
       });
       setMessage("");
+      getMessages();
     }
-    getMessages()
   };
 
   const catchEnter = (e) => {
@@ -73,9 +73,10 @@ const MyChat = () => {
       .doc(chatID)
       .collection("messages")
       .orderBy("time", "asc")
-      .get()
-      .then((snapshot) => setChannelMessages(snapshot.docs.map(doc => doc.data())));
-  }
+      .onSnapshot((snapshot) =>
+        setChannelMessages(snapshot.docs.map((doc) => doc.data()))
+      );
+  };
 
   return (
     <div className="main">
@@ -85,9 +86,12 @@ const MyChat = () => {
           <button className="chat-back-button">Back</button>
         </Link>
         <span className="chat-avatar">
-          <img className="chat-avatar-image" />
+          <img className="chat-avatar-image" src={chatMember?.photo} />
         </span>
+        <span>
         <h3>{chatMember?.name}</h3>
+        <h5>{chatMember?.email}</h5>
+        </span>
       </header>
       <div className="chat-body" ref={chatWrapper}>
         {channelMessages?.map((message) => (

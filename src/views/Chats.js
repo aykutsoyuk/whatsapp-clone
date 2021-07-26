@@ -23,30 +23,51 @@ const Chats = () => {
     );
   }, []);
 
+  const findMyChats = (allChats) => {
+    return allChats?.filter((chat) => chat.members.includes(currentUser.uid));
+  };
+
   const openModal = () => {
-    users && setUsers(users.filter((user => user.name !== currentUser.displayName)))
+    users &&
+      setUsers(users.filter((user) => user.name !== currentUser.displayName));
     setIsModalOpen(true);
   };
+
+  // const findMyChatMember = (members) => {
+  //   console.log("chats", chats);
+  //   const memberID = members?.filter((item) => item !== currentUser?.uid);
+  //   console.log("memberID", memberID[0]);
+
+  //   const member = db
+  //       .collection("users")
+  //       .where("id", "==", memberID[0])
+  //       .get()
+  //       .then((snapshot) => snapshot?.docs[0]?.data())
+
+  //   console.log(member)
+
+  //   return member?.email
+  // };
 
   return (
     <div className="main">
       {!currentUser && <Redirect to="/" />}
       <header className="messages-header">
-        <span className="messages-avatar">
-          <img className="messages-avatar-image" />
-        </span>
         <h2>Chats</h2>
         <button onClick={openModal}>Create Chat</button>
       </header>
       {!!chats[0] ? (
         <ul className="messages-list">
-          {chats?.map((item) => (
+          {findMyChats(chats)?.map((item) => (
             <Link to={`chat/${item.id}`} key={item.id}>
               <li key={item.id} className="messages-list-item">
                 <span className="messages-avatar">
                   <img className="messages-avatar-image" />
                 </span>
-                <h4 className="messages-item-header">{item.id}</h4>
+                <h4 className="messages-item-header">
+                  {/* {findMyChatMember(item.members)} */}
+                  {item.id}
+                </h4>
               </li>
             </Link>
           ))}
